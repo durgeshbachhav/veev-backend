@@ -53,7 +53,7 @@ userSchema.pre("save", async function (next) {
 })
 
 userSchema.methods.generateAccessToken = () => {
-     jsonwebtoken.sign({
+     return jsonwebtoken.sign({
           _id: this._id,
           email: this.email,
           username: this.userName,
@@ -65,7 +65,7 @@ userSchema.methods.generateAccessToken = () => {
 }
 
 userSchema.methods.generateRefreshToken = () => {
-     jsonwebtoken.sign(
+     return jsonwebtoken.sign(
           {
                _id: this._id
           },
