@@ -52,6 +52,10 @@ userSchema.pre("save", async function (next) {
      next()
 })
 
+userSchema.methods.isPasswordValid = async (password) => {
+     return await bcrypt.compare(password, this.password)
+}
+
 userSchema.methods.generateAccessToken = () => {
      return jsonwebtoken.sign({
           _id: this._id,
