@@ -1,6 +1,4 @@
-import mongoose from "mongoose"
-import { asyncHandler } from "../utility/asyncHandler"
-import User from '../models/user.model.js'
+import { asyncHandler } from "../utility/asyncHandler.js"
 import Tweet from '../models/tweet.model.js'
 
 

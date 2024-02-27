@@ -1,4 +1,3 @@
-import mongoose from "mongoose"
 import { asyncHandler } from "../utility/asyncHandler"
 import Playlist from '../models/playlist.model.js'
 
