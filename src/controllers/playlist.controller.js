@@ -1,4 +1,4 @@
-import { asyncHandler } from "../utility/asyncHandler"
+import { asyncHandler } from "../utility/asyncHandler.js"
 import Playlist from '../models/playlist.model.js'
 
 

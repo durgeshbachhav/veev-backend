@@ -1,5 +1,5 @@
 import mongoose from "mongoose"
-import { asyncHandler } from "../utility/asyncHandler"
+import { asyncHandler } from "../utility/asyncHandler.js"
 
 const healthcheck = asyncHandler(async (req, res) => {
     return res.status(200).json(

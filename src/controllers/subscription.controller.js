@@ -1,6 +1,6 @@
 import mongoose from "mongoose"
-import { asyncHandler } from "../utility/asyncHandler"
-import { Subscribe } from "../models/subscription.model"
+import { asyncHandler } from "../utility/asyncHandler.js"
+import { Subscribe } from "../models/subscription.model.js"
 
 
 const toggleSubscription = asyncHandler(async (req, res) => {

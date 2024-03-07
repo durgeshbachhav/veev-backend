@@ -22,15 +22,22 @@ import videoRoutes from './routes/video.routes.js'
 
 
 // declare a routes
-app.use('/api/v1/', commentRoutes)
-app.use('/api/v1/', healthCheckRoutes)
-app.use('/api/v1/', likeRoutes)
-app.use('/api/v1/', playlistRoutes)
-app.use('/api/v1/', subscriptionRoutes)
-app.use('/api/v1/', tweetRoutes)
-app.use('/api/v1/', userRoutes)
-app.use('/api/v1/', videoRoutes)
-app.use('/api/v1/',dashboardRoutes)
+app.get('/api', (req, res) => {
+     res.send('this is api please provide version of api available version /v1')
+})
+app.get('/api/v1', (req, res) => {
+     res.send('welcome to the version 1: please provide next routes eg./user')
+})
+
+app.use('/api/v1/comment', commentRoutes)
+app.use('/api/v1/health-check', healthCheckRoutes)
+app.use('/api/v1/like', likeRoutes)
+app.use('/api/v1/playlist', playlistRoutes)
+app.use('/api/v1/subscription', subscriptionRoutes)
+app.use('/api/v1/tweet', tweetRoutes)
+app.use('/api/v1/user', userRoutes)
+app.use('/api/v1/video', videoRoutes)
+app.use('/api/v1/dashboard', dashboardRoutes)
 
 
 

@@ -1,8 +1,8 @@
 import mongoose from "mongoose"
-import { asyncHandler } from "../utility/asyncHandler"
+import { asyncHandler } from "../utility/asyncHandler.js"
 import Video from 'video.controller.js'
-import { ThrowError } from "../utility/ThrowError";
-import { uploadCloudinary } from "../services/cloudinary";
+import { ThrowError } from "../utility/ThrowError.js";
+import { uploadCloudinary } from "../services/cloudinary.js";
 
 
 // controller for get all videos from searchbar or query

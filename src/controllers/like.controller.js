@@ -1,5 +1,4 @@
-
-import { asyncHandler } from "../utility/asyncHandler"
+import { asyncHandler } from "../utility/asyncHandler.js"
 import Video from '../models/video.model.js'
 import Like from '../models/like.model.js'
 import Comment from '../models/comment.model.js'

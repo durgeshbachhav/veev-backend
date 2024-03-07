@@ -2,7 +2,7 @@ import multer from 'multer'
 
 const LOCALstorage = multer.diskStorage({
      destination: (req, file, cb) => {
-          cb(null, '../../public/temp');
+          cb(null, './public/temp');
      },
      filename: (req, file, cb) => {
           cb(null, file.originalname);
@@ -11,5 +11,5 @@ const LOCALstorage = multer.diskStorage({
 
 
 export const upload = multer({
-     LOCALstorage
+     storage: LOCALstorage
 })
