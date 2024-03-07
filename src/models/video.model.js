@@ -2,11 +2,11 @@ import mongoose, { Schema } from "mongoose";
 
 const videoSchema = mongoose.Schema({
      videoFile: {
-          type: string, //url of cloudinary
+          type: String, //url of cloudinary
           required: true,
      },
      thumbnail: {
-          type: string, // url of cloudinary
+          type: String, // url of cloudinary
           required: true
      },
      owner: {
@@ -14,11 +14,12 @@ const videoSchema = mongoose.Schema({
           ref: "User"
      },
      title: {
-          type: string,
+          type: String,
           required: true
      },
      description: {
-          type: string
+          type: String,
+          required: true
      },
      views: {
           type: Number,

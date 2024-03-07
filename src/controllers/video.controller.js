@@ -1,8 +1,8 @@
-import mongoose from "mongoose"
 import { asyncHandler } from "../utility/asyncHandler.js"
-import Video from 'video.controller.js'
+import { Video } from '../models/video.model.js'
 import { ThrowError } from "../utility/ThrowError.js";
 import { uploadCloudinary } from "../services/cloudinary.js";
+import { ApiResponse } from "../utility/Response.js";
 
 
 // controller for get all videos from searchbar or query
@@ -42,7 +42,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
         return res
             .status(200)
             .json(
-                new Response(200, videos, 'Videos fetched successfully')
+                new ApiResponse(200, videos, 'Videos fetched successfully')
             )
     } catch (error) {
         throw new ThrowError(500, 'Error fetching videos' || error?.message)
@@ -51,26 +51,29 @@ const getAllVideos = asyncHandler(async (req, res) => {
 
 // controller for publishing a video
 const publishAVideo = asyncHandler(async (req, res) => {
-    const { title, description } = req.body
+    console.log('req========>', req.body)
+    const { title, description } = req.body;
 
     if (!title || !description) {
         throw new ThrowError(400, 'title and description is required');
     }
-    if (!req.file) {
+
+    if (!req.files) {
         throw new ThrowError(400, 'video file is required');
     }
-
-    videoFileLocalPath = req.files?.video[0]?.path;
+    console.log('files ==>', req.files);
+    const videoFileLocalPath = req.files?.videoFile[0]?.path;
     if (!videoFileLocalPath) {
         throw new ThrowError(400, 'video file is required')
     }
+    console.log('videofilePath-------------->', videoFileLocalPath)
     const uploadVideo = await uploadCloudinary(videoFileLocalPath);
-
+    console.log('updatevideo ==>', uploadVideo);
     if (!uploadVideo) {
         throw new ThrowError(400, 'error while uploading video')
     }
 
-    thumbnailLocalPath = req.files?.thumbnail[0]?.path;
+    const thumbnailLocalPath = req.files?.thumbnail[0]?.path;
     if (!thumbnailLocalPath) {
         throw new ThrowError(400, 'thumbnail is required')
     }
@@ -85,19 +88,19 @@ const publishAVideo = asyncHandler(async (req, res) => {
         const video = await Video.create({
             videoFile: uploadVideo.url,
             thumbnail: uploadThumbnail.url,
-            title
+            title,
+            description,
+            duration: uploadVideo?.duration
         })
         return res
             .status(200)
             .json(
-                new Response(200, video, 'video upload successfully')
+                new ApiResponse(200, video, 'video upload successfully')
             )
     } catch (error) {
         throw new ThrowError(500, error?.message || 'err0r while uploading video')
     }
 })
-
-
 
 // get a single video by id
 const getVideoById = asyncHandler(async (req, res) => {
@@ -114,14 +117,12 @@ const getVideoById = asyncHandler(async (req, res) => {
         return res
             .status(200)
             .json(
-                new Response(200, video, 'video found successfully')
+                new ApiResponse(200, video, 'video found successfully')
             )
     } catch (error) {
         throw new ThrowError(500, error?.message || 'error while getting single video getvideobyid')
     }
 })
-
-
 
 const updateVideo = asyncHandler(async (req, res) => {
     const { videoId } = req.params
@@ -130,7 +131,8 @@ const updateVideo = asyncHandler(async (req, res) => {
 
     try {
 
-        thumbnailLocalPath = req.files?.thumbnail[0]?.path;
+        console.log('files===========>', req.files);
+        const thumbnailLocalPath = req.files?.thumbnail[0]?.path;
         if (!thumbnailLocalPath) {
             throw new ThrowError(400, 'thumbnail is required')
         }
@@ -162,35 +164,29 @@ const updateVideo = asyncHandler(async (req, res) => {
         return res
             .status(200)
             .json(
-                new Response(200, video, 'video updated successfully')
+                new ApiResponse(200, video, 'video updated successfully')
             )
     } catch (error) {
         throw new ThrowError(500, error?.message || 'error while updateing video')
     }
 })
-
 const deleteVideo = asyncHandler(async (req, res) => {
-    const { videoId } = req.params
+    const { videoId } = req.params;
 
     try {
         const video = await Video.findById(videoId);
 
         if (!video) {
-            throw new ThrowError(400, 'video not found')
+            throw new ThrowError(404, 'Video not found');
         }
 
-        await video.remove();
+        await Video.findByIdAndDelete(videoId);
 
-        return res
-            .status(200)
-            .json(
-                new Response(200, 'video deleted successfully')
-            )
+        return res.status(200).json(new ApiResponse(200, 'Video deleted successfully'));
     } catch (error) {
-        throw new ThrowError(500, error?.message || 'error while deleting video')
+        throw new ThrowError(500, error?.message || 'Error while deleting video');
     }
-})
-
+});
 
 
 const togglePublishStatus = asyncHandler(async (req, res) => {
@@ -209,7 +205,7 @@ const togglePublishStatus = asyncHandler(async (req, res) => {
         return res
             .status(200)
             .json(
-                new Response(200, video, `Video ${video.isPublished ? 'published' : 'unpublished'} successfully`)
+                new ApiResponse(200, video, `Video ${video.isPublished ? 'published' : 'unpublished'} successfully`)
             )
     } catch (error) {
         throw new ThrowError(500, 'error while publishing/toggling a video')

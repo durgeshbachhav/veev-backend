@@ -1,5 +1,6 @@
 import { v2 as cloudinary } from "cloudinary";
 import fs from 'fs'
+import { ThrowError } from "../utility/ThrowError.js";
 
 
 cloudinary.config({
@@ -8,24 +9,44 @@ cloudinary.config({
      api_secret: process.env.CLOUD_API_SECREAT
 });
 
+
+
+
+
 const uploadCloudinary = async (localFilePath) => {
      try {
-          if (!localFilePath) return null
-          //upload file on cloudinary
-          const data = await cloudinary.uploader.upload(localFilePath, { resourse_type: "auto" })
-          console.log("file upload successfully on cloudinary", data?.url);
-          //when file is uploaded on cloudinary then delete from server localpath
-          fs.unlinkSync(localFilePath)
-          return data;
+          if (!localFilePath) {
+               throw new ThrowError('Local file path is missing for Cloudinary upload');
+          }
 
+          // Upload file to Cloudinary
+          const data = await cloudinary.uploader.upload(localFilePath, { resource_type: "auto" });
 
-     } catch (error) {
-          //if getting error while uploading file then also we delete the file from local server
+          // Log successful upload
+          console.log("File uploaded successfully to Cloudinary:", data.url);
 
+          // Delete the local file after successful upload
           fs.unlinkSync(localFilePath);
+
+          // Return Cloudinary response
+          return data;
+     } catch (error) {
+          // Log error
+          console.error("Error uploading file to Cloudinary:", error);
+
+          // Ensure local file is deleted even in case of error
+          try {
+               if (fs.existsSync(localFilePath)) {
+                    fs.unlinkSync(localFilePath);
+               }
+          } catch (unlinkError) {
+               console.error("Error deleting local file:", unlinkError);
+          }
+
+          // Return null to indicate failure
           return null;
      }
-}
+};
 
 export {
      uploadCloudinary
